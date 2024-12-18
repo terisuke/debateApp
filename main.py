@@ -29,8 +29,8 @@ def initialize_agents():
         )
     }
 
-def get_opinions(agents: dict, prompt_manager: PromptManager, topic: str, 
-                relevant_data: Dict, round_num: int = 1, 
+def get_opinions(agents: dict, prompt_manager: PromptManager, topic: str,
+                relevant_data: Dict, round_num: int = 1,
                 previous_conclusion: str = None) -> dict:
     """Get opinions from all agents"""
     opinions = {}
@@ -51,7 +51,7 @@ def get_opinions(agents: dict, prompt_manager: PromptManager, topic: str,
 def print_opinion(agent_name: str, opinion: Any, round_num: int):
     display_names = PromptManager.get_display_names()
     display_name = display_names.get(agent_name, agent_name)
-    print(f"\n{display_name}の意見 その{round_num}")
+    print(f"=== {display_name}の意見 その{round_num} ===")
     print(opinion.content if hasattr(opinion, 'content') else opinion)
 
 def get_relevant_data(topic: str, data_searcher: DataSearcher) -> Dict:
@@ -119,12 +119,13 @@ def main():
     prompt_manager = PromptManager()
     data_searcher = DataSearcher(os.getenv("NEWS_API_KEY"))
     # トピック(ここで話題を決める)
-    topic = "日本の株式市場の今後の展望について"
+    topic = "アメリカの株式市場と日本の株式市場を比較して、今後の展望について"
     
     # データ収集
     relevant_data = get_relevant_data(topic, data_searcher)
     
     # Round 1 with data
+    print(f"\n=== トピック: {topic} ===")
     print("\n=== 第1ラウンド ===")
     round1_opinions = get_opinions(agents, prompt_manager, topic, relevant_data, round_num=1)
     round1_conclusion_prompt = prompt_manager.format_conclusion_prompt(round1_opinions, 1)
@@ -145,7 +146,6 @@ def main():
         round_num=2, 
         previous_conclusion=round1_conclusion.content
     )
-    
     # Final Conclusion
     final_opinions = {
         "Round1": round1_opinions,
