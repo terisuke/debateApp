@@ -1,10 +1,85 @@
-# LangChainでマルチエージェントを作るためのリポジトリ
+# マルチAIエージェントディベートシステム
 
-このリポジトリは、LangChainを使用してマルチエージェントシステムを構築するためのものです。以下の環境とツールを使用しています。
+## 概要
 
-- 環境: Anacondaの`debateApp`
-- Pythonのバージョン: 3.11
-- 参考記事: [サクッと始めるプロンプトエンジニアリング【LangChain / ChatGPT】](https://zenn.dev/umi_mori/books/prompt-engineer)
+このプロジェクトは、複数のAIエージェント（OpenAI、Anthropic Claude、Google Gemini）を活用して、特定のトピックについて議論を行うシステムです。各エージェントは異なる役割（若者、ビジネスパーソン、主婦）を持ち、2ラウンドの議論を通じて意見を交換します。また、関連するニュースや市場データを参照しながら、より具体的な議論を展開します。
 
-LangChainのCLIとLangServeはcondaでインストールできないため、pipを使用してインストールしました。
+## 特徴
 
+- 3つの異なるAIエージェントによる多角的な議論
+- キャラクター設定に基づいた独自の話し方と視点
+- 2ラウンド制の議論形式
+- 各ラウンド後の意見集約と最終まとめ
+- ニュースAPIと株価データの活用
+- 議論内容のMarkdownファイル出力機能
+
+## 必要な環境
+
+- Python 3.11
+- Anaconda環境: `debateApp`
+
+## 必要なAPI キー
+
+以下のAPIキーを`.env`ファイルに設定する必要があります：
+
+- OPENAI_API_KEY
+- ANTHROPIC_API_KEY
+- GOOGLE_API_KEY
+- NEWS_API_KEY
+
+## インストール方法
+
+```bash
+conda create -n debateApp python=3.11
+
+conda activate debateApp
+
+pip install -r requirements.txt
+```
+
+## 使用方法
+
+1. `.env`ファイルに必要なAPIキーを設定
+2. 以下のコマンドで実行：
+
+```bash
+python main.py
+```
+
+
+## システム構成
+
+- `main.py`: メインの実行ファイル
+- `prompts/`: プロンプト関連のモジュール
+  - `base_prompts.py`: 基本プロンプトの定義
+  - `round2_prompts.py`: 2ラウンド目用のプロンプト
+  - `prompt_manager.py`: プロンプト管理クラス
+- `utils/`: ユーティリティモジュール
+  - `data_searcher.py`: ニュースと市場データの取得
+
+## エージェント設定
+
+- 若者代表（OpenAI）: 17歳の女子高生
+  - カジュアルな口調で若者視点の意見
+- ビジネス代表（Anthropic）: スタートアップCEO
+  - ビジネス的な視点での分析と提案
+- 主婦代表（Google）: 55歳の専業主婦
+  - 生活者視点からの実践的な意見
+
+## 出力ファイル
+
+議論の内容は自動的にMarkdownファイルとして保存され、以下の情報が含まれます：
+- 議論テーマ
+- 第1ラウンドの各参加者の意見とまとめ
+- 第2ラウンドの各参加者の意見と最終まとめ
+- 具体的なアクションプラン
+
+## ライセンス
+
+MIT
+
+## 注意事項
+
+- 各種APIの利用料金が発生する可能性があります
+- 各APIの利用規約を確認の上でご使用ください
+- ニュースAPIの利用制限にご注意ください

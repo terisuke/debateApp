@@ -1,0 +1,5 @@
+newsapi-python
+yfinance
+beautifulsoup4
+pandas
+requests

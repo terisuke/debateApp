@@ -16,7 +16,7 @@ class PromptManager:
             for agent_type, settings in CHARACTER_SETTINGS.items()
         }
     @staticmethod
-    def get_prompt(agent_type: str, topic: str) -> str:
+    def get_prompt(agent_type: str, topic: str, relevant_data: Dict = None) -> str:
         prompts = {
             "openai": OPENAI_BASE_PROMPT,
             "anthropic": ANTHROPIC_BASE_PROMPT,
@@ -24,6 +24,22 @@ class PromptManager:
             "conclusion": CONCLUSION_BASE_PROMPT
         }
         base_prompt = prompts.get(agent_type, "")
+        
+        if relevant_data:
+            data_context = """
+            以下のデータを参考に議論してください：
+            
+            ニュース記事：
+            {}
+            
+            市場データ：
+            {}
+            """.format(
+                "\n".join([f"- {article['title']}" for article in relevant_data.get("news", [])[:3]]),
+                "\n".join([f"- {k}: {v.tail(1)}" for k, v in relevant_data.get("market_data", {}).items()])
+            )
+            base_prompt = base_prompt + "\n" + data_context
+        
         return base_prompt.format(topic=topic)
 
     @staticmethod
